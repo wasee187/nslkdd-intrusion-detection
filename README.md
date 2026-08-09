@@ -2,6 +2,7 @@
 
 > Binary classification of network connections as **normal** or **malicious**, using the NSL-KDD dataset.
 
+
 ---
 
 ## 📊 Dataset
@@ -45,14 +46,18 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
 - 🧹 Noted: the `difficulty` column is metadata about historical classification difficulty — **not a real feature**, excluded from model training
 
+### ✅ Section 2: Binary Label Creation
+- Created a new `binary_label` column collapsing all 22 specific attack types into a single `attack` category, alongside `normal`
+- Train set: 67,343 normal / 58,630 attack (~53/47 split)
+- Test set: 9,711 normal / 12,833 attack (~43/57 split) — **majority flipped compared to train**
+- 🔑 Key finding: NSL-KDD's test set deliberately includes attack patterns not seen in training, to test generalization rather than memorization — a harder, more realistic evaluation than train/test sets with matching distributions
+
 ### 🔜 Next Up
-- [ ] Create binary label column (normal vs. attack)
 - [ ] Preprocessing: encode categorical features, scale numeric features
 - [ ] Train baseline models: Logistic Regression, Decision Tree, Random Forest
 - [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
 
----
-
+```
 ## 🧠 Key Learnings (for interview prep)
 
 - Accuracy alone is misleading on imbalanced data — precision/recall/F1 tell the real story
