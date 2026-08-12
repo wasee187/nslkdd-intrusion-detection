@@ -52,8 +52,16 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 - Test set: 9,711 normal / 12,833 attack (~43/57 split) — **majority flipped compared to train**
 - 🔑 Key finding: NSL-KDD's test set deliberately includes attack patterns not seen in training, to test generalization rather than memorization — a harder, more realistic evaluation than train/test sets with matching distributions
 
+### ✅ Section 3: Preprocessing
+- Verified categorical columns (`protocol_type`, `service`, `flag`) using `.unique()`: 3 / 70 / 11 distinct values respectively
+- One-hot encoded categorical columns using `OneHotEncoder(handle_unknown="ignore")`, fit on train only, applied to both train and test — 84 new columns total
+- Verified numeric columns via `.dtypes` before scaling, rather than assuming
+- Scaled 38 numeric columns using `StandardScaler`, fit on train only, applied to both train and test
+- Merged scaled numeric + encoded categorical + binary label into one final table using `pd.concat(axis=1)`
+- Final shapes: `train_final (125973, 123)`, `test_final (22544, 123)`
+- 🔑 Key principle applied throughout: **fit only on train, transform both train and test** — prevents data leakage from test into how features are encoded/scaled
+
 ### 🔜 Next Up
-- [ ] Preprocessing: encode categorical features, scale numeric features
 - [ ] Train baseline models: Logistic Regression, Decision Tree, Random Forest
 - [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
 
@@ -63,3 +71,22 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 - Accuracy alone is misleading on imbalanced data — precision/recall/F1 tell the real story
 - Binary-first, multi-class-second is a deliberate strategy, not a shortcut
 - The `difficulty` column looked useful at first glance but had to be excluded — good example of "not every column belongs in your model"
+
+## 🐛 Bugs & Fixes
+
+### `.gitignore` not excluding `data/` folder
+- **Problem:** Added `data/` to `.gitignore`, but `git status` still showed the data files as untracked/staged
+- **Diagnosis:** Used `git check-ignore -v data/` to test whether git recognized the ignore rule — it returned nothing, confirming git genuinely wasn't applying it (not a git status display issue)
+- **Fix:** Deleted and recreated `.gitignore` from scratch, typing (not pasting) the contents directly in VS Code, confirmed UTF-8 encoding — likely an invisible character or encoding issue in the original file
+- **Lesson:** When a config file "should" work but doesn't, verify with a diagnostic command (`git check-ignore -v`) rather than guessing — and don't rule out the file itself being subtly corrupted
+
+
+## 📐 Statistics Notes
+
+### Standard Deviation
+- **Formula:** `scaled_value = (original_value - mean) / standard_deviation`
+- Standard deviation is calculated as: mean → variance (average of squared distances from the mean) → square root of variance
+- Standard deviation itself is **always ≥ 0** (built from squared distances, can't be negative)
+- Higher std = more spread out data; lower std = data clustered near the mean
+- Verified by hand on the `duration` column: mean = 287.14, std = 2604.52 — std being much larger than the mean itself is a signal that this feature has extreme outliers (most connections are short, a few run very long)
+- **Common confusion I had:** standard deviation itself is never negative, but *scaled values* (the output of applying the formula to individual rows) absolutely can be negative — a negative scaled value just means that row's original value was below the column's average. These are two different numbers: one describes the whole column's spread, the other describes one row's position relative to that spread.
