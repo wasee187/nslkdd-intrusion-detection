@@ -61,6 +61,8 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 - Final shapes: `train_final (125973, 123)`, `test_final (22544, 123)`
 - 🔑 Key principle applied throughout: **fit only on train, transform both train and test** — prevents data leakage from test into how features are encoded/scaled
 
+- 💾 Saved final processed data to `data/processed_train.csv` and `data/processed_test.csv` for use in the modeling notebook (kept preprocessing and modeling as separate notebooks for clarity)
+
 ### 🔜 Next Up
 - [ ] Train baseline models: Logistic Regression, Decision Tree, Random Forest
 - [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
