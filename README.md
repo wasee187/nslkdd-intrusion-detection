@@ -63,6 +63,24 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
 - 💾 Saved final processed data to `data/processed_train.csv` and `data/processed_test.csv` for use in the modeling notebook (kept preprocessing and modeling as separate notebooks for clarity)
 
+### ✅ Section 4a: Logistic Regression (baseline)
+- Trained `LogisticRegression(max_iter=1000)` on 122 features, 125,973 training rows
+- Test set results:
+
+  | Metric | Attack | Normal |
+  |---|---|---|
+  | Precision | 0.92 | 0.65 |
+  | Recall | 0.62 | 0.93 |
+  | F1-score | 0.74 | 0.76 |
+
+  Overall accuracy: 75%
+
+- 🔑 Key finding: high precision but low recall on the attack class means the model is **cautious about false alarms but misses real threats** — confusion matrix shows 4,831 real attacks (out of 12,833) were misclassified as normal, a 37.6% miss rate
+- In a security context, this kind of false negative (missed attack) is more dangerous than a false positive (false alarm) — this is the gap I want Decision Tree and Random Forest to close
+- Possible optimizations identified (not yet applied): adjusting decision threshold, `class_weight="balanced"`, tuning regularization (`C`), or trying non-linear models
+
+![Confusion Matrix - Logistic Regression](images/confusion_matrix_logreg.png)
+
 ### 🔜 Next Up
 - [ ] Train baseline models: Logistic Regression, Decision Tree, Random Forest
 - [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
