@@ -109,6 +109,32 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 - Binary-first, multi-class-second is a deliberate strategy, not a shortcut
 - The `difficulty` column looked useful at first glance but had to be excluded — good example of "not every column belongs in your model"
 
+### ✅ Section 4c: Random Forest
+- Trained `RandomForestClassifier(random_state=42)` (100 trees, default settings)
+- Test set results:
+
+  | Metric | Attack | Normal |
+  |---|---|---|
+  | Precision | 0.97 | 0.65 |
+  | Recall | 0.61 | 0.97 |
+  | F1-score | 0.75 | 0.78 |
+
+  Overall accuracy: 77%
+
+![Confusion Matrix - Random Forest](images/confusion_matrix_rf.png)
+
+### 📊 Three-Model Comparison
+
+| Model | Attack Precision | Attack Recall | Attack F1 | Accuracy | Attacks Missed |
+|---|---|---|---|---|---|
+| Logistic Regression | 0.92 | 0.62 | 0.74 | 75% | 4,831 / 12,833 |
+| Decision Tree | 0.96 | **0.65** | **0.77** | **79%** | **4,529 / 12,833** |
+| Random Forest | **0.97** | 0.61 | 0.75 | 77% | 4,988 / 12,833 |
+
+🔑 **Key finding:** Decision Tree outperformed untuned Random Forest on recall, F1, and accuracy — counter to the common assumption that ensembles always beat single trees. Likely explanation: Random Forest's advantage depends heavily on tuning (number of trees, depth, feature sampling); with default settings, it didn't clearly outperform a single well-fit tree here. This is a strong candidate for hyperparameter tuning as a next step.
+
+⚠️ **Debugging note:** initially pulled a mismatched confusion matrix (from a stale/incorrect prediction variable after a kernel restart) that gave inconsistent numbers versus the classification report. Caught by cross-checking recall/accuracy calculated from the confusion matrix against the reported metrics — they didn't match, which flagged the error before it got recorded incorrectly.
+
 ## 🐛 Bugs & Fixes
 
 ### `.gitignore` not excluding `data/` folder
