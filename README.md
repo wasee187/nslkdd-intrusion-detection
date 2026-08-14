@@ -81,6 +81,23 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
 ![Confusion Matrix - Logistic Regression](images/confusion_matrix_logreg.png)
 
+
+### ✅ Section 4b: Decision Tree
+- Trained `DecisionTreeClassifier(random_state=42)` on the same 122 features
+- Test set results:
+
+  | Metric | Attack | Normal |
+  |---|---|---|
+  | Precision | 0.96 | 0.68 |
+  | Recall | 0.65 | 0.97 |
+  | F1-score | 0.77 | 0.80 |
+
+  Overall accuracy: 79%
+
+- 🔑 Key finding: improved over Logistic Regression on every metric, but recall on attack class (0.65) is only a modest gain over LogReg's 0.62 — still missing roughly a third of real attacks. Suggests the imbalance itself may be a bigger driver of this pattern than model architecture alone.
+
+![Confusion Matrix - Decision Tree](images/confusion_matrix_tree.png)
+
 ### 🔜 Next Up
 - [ ] Train baseline models: Logistic Regression, Decision Tree, Random Forest
 - [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
