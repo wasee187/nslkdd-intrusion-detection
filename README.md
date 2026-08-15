@@ -121,7 +121,7 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
   Overall accuracy: 77%
 
-![Confusion Matrix - Random Forest](images/confusion_matrix_rf.png)
+![Confusion Matrix - Random Forest](images/confusion_matrix_rndm_f.png)
 
 ### 📊 Three-Model Comparison
 
