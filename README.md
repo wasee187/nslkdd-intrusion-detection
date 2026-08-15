@@ -98,17 +98,6 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
 ![Confusion Matrix - Decision Tree](images/confusion_matrix_tree.png)
 
-### 🔜 Next Up
-- [ ] Train baseline models: Logistic Regression, Decision Tree, Random Forest
-- [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
-
-```
-## 🧠 Key Learnings (for interview prep)
-
-- Accuracy alone is misleading on imbalanced data — precision/recall/F1 tell the real story
-- Binary-first, multi-class-second is a deliberate strategy, not a shortcut
-- The `difficulty` column looked useful at first glance but had to be excluded — good example of "not every column belongs in your model"
-
 ### ✅ Section 4c: Random Forest
 - Trained `RandomForestClassifier(random_state=42)` (100 trees, default settings)
 - Test set results:
@@ -134,6 +123,19 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 🔑 **Key finding:** Decision Tree outperformed untuned Random Forest on recall, F1, and accuracy — counter to the common assumption that ensembles always beat single trees. Likely explanation: Random Forest's advantage depends heavily on tuning (number of trees, depth, feature sampling); with default settings, it didn't clearly outperform a single well-fit tree here. This is a strong candidate for hyperparameter tuning as a next step.
 
 ⚠️ **Debugging note:** initially pulled a mismatched confusion matrix (from a stale/incorrect prediction variable after a kernel restart) that gave inconsistent numbers versus the classification report. Caught by cross-checking recall/accuracy calculated from the confusion matrix against the reported metrics — they didn't match, which flagged the error before it got recorded incorrectly.
+
+### 🔜 Next Up
+
+- [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
+
+```
+## 🧠 Key Learnings (for interview prep)
+
+- Accuracy alone is misleading on imbalanced data — precision/recall/F1 tell the real story
+- Binary-first, multi-class-second is a deliberate strategy, not a shortcut
+- The `difficulty` column looked useful at first glance but had to be excluded — good example of "not every column belongs in your model"
+
+
 
 ## 🐛 Bugs & Fixes
 
