@@ -124,6 +124,29 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
 ⚠️ **Debugging note:** initially pulled a mismatched confusion matrix (from a stale/incorrect prediction variable after a kernel restart) that gave inconsistent numbers versus the classification report. Caught by cross-checking recall/accuracy calculated from the confusion matrix against the reported metrics — they didn't match, which flagged the error before it got recorded incorrectly.
 
+### ✅ Section 5: Interpretability
+
+**Logistic Regression coefficients:**
+- Checked top features pushing toward attack/normal
+- Found two issues with trusting raw coefficients blindly:
+  - `flag_S0` looked weak/backwards in the coefficients, but real data showed it's 99% attack when present — likely explained by correlated features "absorbing" its credit
+  - `num_compromised` had the single strongest coefficient, but 99% of rows share the same value — likely an unstable coefficient learned from very few varying examples
+- 🔑 Lesson: individual coefficients can mislead when features are correlated or rarely vary — always cross-check against real data before trusting a "top feature" list
+
+**Decision Tree visualization (first 2 levels):**
+- Root split: `src_bytes <= -0.008` (very low data sent) — most powerful single split across all 122 features
+- Left branch (low src_bytes, not http) → strongly attack-leaning (gini 0.149)
+- Right branch (normal/higher src_bytes) → strongly normal-leaning
+- Matches domain knowledge from Section 1: many attacks send little/no data (connection never completes)
+
+**Random Forest feature importance (top 15):**
+- Top feature: `src_bytes` (0.169) — agrees with Decision Tree's top split, two independent methods confirming the same finding
+- `flag_S0` ranks 14th (0.023) — real but diluted by correlated features
+- New finding: `logged_in` ranks 6th (0.052) — makes sense, many attacks never complete authentication
+- 🔑 Overall pattern: model relies mainly on traffic volume, service-behavior consistency, and login status — a sensible, explainable set of signals, not black-box noise
+
+![Decision Tree (first 2 levels)](images/decision_tree_viz.png)
+
 ### 🔜 Next Up
 
 - [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
