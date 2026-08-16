@@ -170,9 +170,6 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
 🔑 **Key finding:** tuning improved Random Forest's recall (0.61 → 0.63), but it still didn't beat the untuned Decision Tree on recall, F1, or accuracy. This suggests Decision Tree's advantage on this dataset isn't just about missing tuning — it may genuinely fit this data's structure well on its own. A good reminder that simpler models deserve real consideration, not just as a baseline to beat.
 
-### 🔜 Next Up
-
-- [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
 
 ```
 ## 🧠 Key Learnings (for interview prep)
