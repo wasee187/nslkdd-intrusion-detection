@@ -147,6 +147,29 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 
 ![Decision Tree (first 2 levels)](images/decision_tree_viz.png)
 
+### ✅ Section 6: Hyperparameter Tuning (Random Forest)
+
+- Used `GridSearchCV` to test combinations of `n_estimators` [100, 200], `max_depth` [None, 10, 20], `class_weight` ["balanced"]
+- 30 models trained total (6 combinations × 5-fold cross-validation)
+- Best combination found: `n_estimators=200, max_depth=None, class_weight="balanced"`
+- Cross-validation score during search: **99.9% accuracy** — but this was measured only on training data splits
+
+**⚠️ Important finding: the 99.9% score was misleading.**
+- When tested on the real, held-out test set, accuracy dropped to **78%**
+- This is a textbook example of **overfitting** — the model performed almost perfectly on data resembling what it trained on, but much worse on genuinely new patterns
+- Directly connects back to Section 2's finding: NSL-KDD's test set deliberately contains attack patterns not present in training, so a high training-side score doesn't guarantee real-world performance
+
+**Tuned Random Forest vs. all previous models (real test set results):**
+
+| Model | Attack Precision | Attack Recall | Attack F1 | Accuracy |
+|---|---|---|---|---|
+| Logistic Regression | 0.92 | 0.62 | 0.74 | 75% |
+| Decision Tree | 0.96 | 0.65 | 0.77 | **79%** |
+| Random Forest (default) | 0.97 | 0.61 | 0.75 | 77% |
+| Random Forest (tuned) | 0.97 | 0.63 | 0.76 | 78% |
+
+🔑 **Key finding:** tuning improved Random Forest's recall (0.61 → 0.63), but it still didn't beat the untuned Decision Tree on recall, F1, or accuracy. This suggests Decision Tree's advantage on this dataset isn't just about missing tuning — it may genuinely fit this data's structure well on its own. A good reminder that simpler models deserve real consideration, not just as a baseline to beat.
+
 ### 🔜 Next Up
 
 - [ ] Evaluate with precision / recall / F1 / confusion matrix (not just accuracy — class imbalance in attack subtypes)
