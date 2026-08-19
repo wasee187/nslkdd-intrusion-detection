@@ -225,4 +225,4 @@ Overall accuracy: 74%
 - **Broader pattern across the whole confusion matrix:** almost every misclassification, across every class, leans toward "normal" — the model is systematically biased toward the majority class, especially for classes it saw least during training
 - This is a direct, concrete demonstration of the class imbalance problem flagged back in Section 1, now visible in real model behavior, not just theory
 
-![Confusion Matrix - Logistic Regression (Multi-class)](images/confusion_matrix_lr_multiclass.png)
+![Confusion Matrix - Logistic Regression (Multi-class)](images/confusion_matrix_logreg.png)
