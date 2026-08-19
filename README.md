@@ -51,6 +51,8 @@ Three models trained and compared: Logistic Regression, Decision Tree, and Rando
 - Feature importance analysis (Random Forest + Decision Tree structure) showed the model relies on sensible signals: traffic volume (`src_bytes`), service-behavior consistency, and login status
 - Hyperparameter tuning revealed a significant overfitting gap: 99.9% cross-validation accuracy dropped to 78% on the real test set — a concrete example of why proper train/test evaluation matters
 
+- ✅ **Multi-class classification** (5 categories: normal, DoS, Probe, R2L, U2R) — preprocessing complete, modeling next
+
 ## 📖 Full Methodology & Learning Notes
 
 For a detailed, section-by-section breakdown of every step — including debugging notes, statistics explanations, and what was learned along the way — see [LEARNING_LOG.md](LEARNING_LOG.md).

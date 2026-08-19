@@ -193,3 +193,11 @@
 ### Section: Encoding
 - Same approach as binary project: `OneHotEncoder(handle_unknown="ignore")`, fit on train only, applied to both train and test
 - Verified fit-only-on-train principle again to prevent data leakage
+
+### Section: Scaling & Merge
+- Same `StandardScaler` approach as binary project: fit on train's 38 numeric columns only, applied to both train and test
+- Merged scaled numeric + encoded categorical + `attack_category` label into final tables
+- Final shapes: `train_final (125973, 123)`, `test_final (22544, 123)` — same feature count as binary project (122 features), only the label column differs
+- Saved to `data/processed_train_multiclass.csv` and `data/processed_test_multiclass.csv`, ready for the modeling notebook
+
+**Preprocessing for multi-class is complete.**
