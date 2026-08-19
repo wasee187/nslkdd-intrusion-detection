@@ -168,3 +168,28 @@
 - Higher std = more spread out data; lower std = data clustered near the mean
 - Verified by hand on the `duration` column: mean = 287.14, std = 2604.52 — std being much larger than the mean itself is a signal that this feature has extreme outliers (most connections are short, a few run very long)
 - **Common confusion I had:** standard deviation itself is never negative, but *scaled values* (the output of applying the formula to individual rows) absolutely can be negative — a negative scaled value just means that row's original value was below the column's average. These are two different numbers: one describes the whole column's spread, the other describes one row's position relative to that spread.
+
+
+
+## 🔄 Multi-class Extension (In Progress)
+
+### Section: Category Mapping
+- Original `label` column has ~22 specific attack names — grouped into 4 standard categories (DoS, Probe, R2L, U2R) plus `normal`, per NSL-KDD convention
+- First attempt used a smaller, commonly-cited 22-name mapping — verified against real data using an automated check (not just manual inspection) and found 17 test-set labels were uncovered (`snmpgetattack`, `sqlattack`, `xlock`, `httptunnel`, `saint`, `processtable`, `named`, `ps`, `sendmail`, `xterm`, `snmpguess`, `worm`, `udpstorm`, `mailbomb`, `xsnoop`, `apache2`, `mscan`)
+- 🔑 Key finding: these 17 are legitimate attack types that exist only in the test set, never in training — another instance of NSL-KDD's deliberate train/test distribution shift (first discovered in Section 2 for binary labels)
+- Found and applied an extended category mapping covering all attack types; re-verified with the same automated check — confirmed zero uncovered labels in both train and test
+
+### Category distribution
+| Category | Train | Test |
+|---|---|---|
+| normal | 67,343 | 9,711 |
+| DoS | 45,927 | 7,460 |
+| Probe | 11,656 | 2,421 |
+| R2L | 995 | 2,885 |
+| U2R | 52 | 67 |
+
+- ⚠️ U2R is extremely small in both sets (52 train / 67 test) — expect this to be the hardest class for any model to learn reliably, not a bug if results are poor here
+
+### Section: Encoding
+- Same approach as binary project: `OneHotEncoder(handle_unknown="ignore")`, fit on train only, applied to both train and test
+- Verified fit-only-on-train principle again to prevent data leakage

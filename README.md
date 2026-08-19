@@ -43,6 +43,9 @@ Three models trained and compared: Logistic Regression, Decision Tree, and Rando
 | Random Forest (default) | 0.97 | 0.61 | 0.75 | 77% |
 | Random Forest (tuned) | 0.97 | 0.63 | 0.76 | 78% |
 
+
+- 🔄 **Multi-class classification** (5 categories: normal, DoS, Probe, R2L, U2R) — preprocessing in progress
+
 **Key findings:**
 - Decision Tree outperformed Random Forest, even after tuning — a reminder that simpler models can beat more complex ones on certain data
 - Feature importance analysis (Random Forest + Decision Tree structure) showed the model relies on sensible signals: traffic volume (`src_bytes`), service-behavior consistency, and login status
