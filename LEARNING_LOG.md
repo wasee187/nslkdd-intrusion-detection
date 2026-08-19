@@ -169,7 +169,7 @@
 - Verified by hand on the `duration` column: mean = 287.14, std = 2604.52 — std being much larger than the mean itself is a signal that this feature has extreme outliers (most connections are short, a few run very long)
 - **Common confusion I had:** standard deviation itself is never negative, but *scaled values* (the output of applying the formula to individual rows) absolutely can be negative — a negative scaled value just means that row's original value was below the column's average. These are two different numbers: one describes the whole column's spread, the other describes one row's position relative to that spread.
 
-
+```
 
 ## 🔄 Multi-class Extension (In Progress)
 
@@ -201,3 +201,28 @@
 - Saved to `data/processed_train_multiclass.csv` and `data/processed_test_multiclass.csv`, ready for the modeling notebook
 
 **Preprocessing for multi-class is complete.**
+### Section: Logistic Regression (Multi-class)
+- Trained `LogisticRegression(max_iter=1000, solver="saga")` on 5 classes: normal, DoS, Probe, R2L, U2R
+- ⚠️ Training took ~16 minutes (vs. 14 seconds for binary) — multi-class Logistic Regression is significantly more expensive, since it's effectively solving multiple related classification problems internally. Switched to `solver="saga"` (better suited for larger, multi-class problems) after the default solver got stuck running 20+ minutes without finishing.
+
+**Results:**
+
+| Class | Precision | Recall | F1 | Support |
+|---|---|---|---|---|
+| DoS | 0.91 | 0.80 | 0.85 | 7,460 |
+| Probe | 0.86 | 0.73 | 0.79 | 2,421 |
+| R2L | 0.67 | **0.00** | **0.00** | 2,885 |
+| U2R | 0.89 | 0.25 | 0.40 | 67 |
+| normal | 0.65 | 0.93 | 0.76 | 9,711 |
+
+Overall accuracy: 74%
+
+**🔑 Key finding: severe class imbalance directly breaks R2L detection.**
+- R2L recall is 0.00 — the model essentially never correctly identifies a real R2L attack
+- Confusion matrix confirms why: of 2,885 real R2L attacks, 2,872 (nearly all of them) were misclassified as `normal`
+- Direct explanation: R2L had only 995 training examples (0.8% of training data) — far too few for the model to learn a reliable pattern
+- U2R shows the same pattern, less severely (52 training examples, recall 0.25)
+- **Broader pattern across the whole confusion matrix:** almost every misclassification, across every class, leans toward "normal" — the model is systematically biased toward the majority class, especially for classes it saw least during training
+- This is a direct, concrete demonstration of the class imbalance problem flagged back in Section 1, now visible in real model behavior, not just theory
+
+![Confusion Matrix - Logistic Regression (Multi-class)](images/confusion_matrix_lr_multiclass.png)
