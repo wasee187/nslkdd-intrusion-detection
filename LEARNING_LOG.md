@@ -251,3 +251,36 @@ Overall accuracy: 76% (vs. Logistic Regression's 74%)
 - **Consistent pattern across two different model types:** when either model fails on R2L, it defaults to "normal," not a different attack category — strong evidence this reflects a real property of the data (R2L looks similar to normal traffic from the model's perspective), not just an algorithm quirk
 
 ![Confusion Matrix - Decision Tree (Multi-class)](images/confusion_matrix_dt_multiclass.png)
+
+### Section: Random Forest (Multi-class)
+- Trained `RandomForestClassifier(random_state=42, n_jobs=1)` — 26 seconds to train
+
+**Results:**
+
+| Class | Precision | Recall | F1 | Support |
+|---|---|---|---|---|
+| DoS | 0.96 | 0.76 | 0.85 | 7,460 |
+| Probe | 0.82 | 0.61 | 0.70 | 2,421 |
+| R2L | 0.98 | 0.05 | 0.09 | 2,885 |
+| U2R | 0.62 | 0.07 | 0.13 | 67 |
+| normal | 0.64 | 0.97 | 0.77 | 9,711 |
+
+Overall accuracy: 74%
+
+⚠️ **Debugging note:** initially pasted a confusion matrix that turned out to be an exact duplicate of Decision Tree's (copy/reference mix-up between similarly-named prediction variables). Caught by cross-checking recall calculated from the matrix against the classification report's reported recall — they didn't match, flagging the error. Corrected by recalculating predictions and confusion matrix together, in one cell, to guarantee consistency.
+
+### 📊 Multi-class Three-Model Comparison
+
+| Model | Accuracy | R2L Recall | U2R Recall |
+|---|---|---|---|
+| Logistic Regression | 74% | 0.00 | 0.25 |
+| **Decision Tree** | **76%** | **0.07** | **0.25** |
+| Random Forest (default) | 74% | 0.05 | 0.07 |
+
+**🔑 Key findings:**
+- Decision Tree wins again — same result as the binary project, now confirmed on a harder, 5-class problem. This is a repeatable, non-coincidental finding: untuned Random Forest consistently underperforms a single Decision Tree on this dataset.
+- **Why Random Forest struggles more on rare classes specifically:** each tree in a Random Forest only considers a random subset of features at each split. For classes with very few examples (R2L: 995 training rows, U2R: 52), some trees may never see the specific features that matter most for that rare class. A single Decision Tree, by contrast, always considers every feature at every split — giving it a better chance of finding whatever narrow signal exists for a rare class.
+- **Consistent failure pattern across all three models:** when any model misclassifies a rare-class attack (R2L or U2R), it overwhelmingly defaults to predicting "normal" — never a different attack type. This held true independently across three different algorithms, strongly suggesting it reflects a genuine property of the data (rare attacks resemble normal traffic from a feature perspective) rather than a quirk of any one model.
+- R2L is the hardest class across all models (best recall achieved: only 0.07, by Decision Tree) — directly explained by it having the fewest relative training examples among attack categories after DoS/Probe.
+
+![Confusion Matrix - Random Forest (Multi-class)](images/confusion_matrix_rf_multiclass.png)
