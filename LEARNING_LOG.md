@@ -284,3 +284,30 @@ Overall accuracy: 74%
 - R2L is the hardest class across all models (best recall achieved: only 0.07, by Decision Tree) — directly explained by it having the fewest relative training examples among attack categories after DoS/Probe.
 
 ![Confusion Matrix - Random Forest (Multi-class)](images/confusion_matrix_rf_multiclass.png)
+
+
+### Section: Tuning Attempt — class_weight="balanced" (Decision Tree)
+- Tested `DecisionTreeClassifier(random_state=42, class_weight="balanced")` — directly targeting the R2L/U2R rare-class problem
+
+**Result: this made things worse, not better.**
+
+| Metric (R2L) | Unbalanced | Balanced |
+|---|---|---|
+| Precision | 0.98 | 0.28 |
+| Recall | 0.07 | 0.02 |
+
+- U2R also declined (recall 0.25 → 0.12)
+- Probe improved slightly (recall 0.63 → 0.69), but this doesn't offset the R2L/U2R regression
+
+**🔑 Key finding: class weighting alone did not fix the rare-class problem — it made it worse.**
+- `class_weight="balanced"` amplifies the importance of existing rare-class examples, but doesn't add new information — it can't teach the model patterns it never saw
+- Since R2L consistently gets confused with `normal` across all three models (not just this one), the likely explanation is that R2L's available features/examples don't contain enough distinguishing signal to separate it from normal traffic, at least not for these model types
+- Amplifying importance on already-ambiguous examples made the model guess R2L more often, which increased false positives (hence precision crashing from 0.98 to 0.28) without meaningfully improving true detection
+- **Real conclusion:** fixing this would likely require more R2L training data, engineered features specific to R2L attack behavior, or resampling techniques (e.g., SMOTE) — not just reweighting existing examples. This is a genuine limitation of the dataset/approach, not a bug to be tuned away.
+
+## ✅ Multi-class Project: Final Summary
+
+- Best model: Decision Tree (untuned), 76% accuracy
+- Consistent, well-supported finding across all experiments: severe class imbalance (R2L: 995 examples, U2R: 52) directly causes poor detection of rare attack types, with nearly all failures defaulting to "normal" rather than a different attack type
+- Simple rebalancing (class_weight) does not fix this — a genuine dataset/approach limitation worth naming honestly rather than working around
+- Future improvement ideas (not implemented): SMOTE oversampling, engineered R2L-specific features, or gathering more R2L examples
