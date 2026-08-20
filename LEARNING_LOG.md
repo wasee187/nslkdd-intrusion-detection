@@ -226,3 +226,28 @@ Overall accuracy: 74%
 - This is a direct, concrete demonstration of the class imbalance problem flagged back in Section 1, now visible in real model behavior, not just theory
 
 ![Confusion Matrix - Logistic Regression (Multi-class)](images/confusion_matrix_logreg_multiclass.png)
+
+
+### Section: Decision Tree (Multi-class)
+- Trained `DecisionTreeClassifier(random_state=42)` on the same 5 classes
+
+**Results:**
+
+| Class | Precision | Recall | F1 | Support |
+|---|---|---|---|---|
+| DoS | 0.95 | 0.82 | 0.88 | 7,460 |
+| Probe | 0.79 | 0.63 | 0.70 | 2,421 |
+| R2L | 0.98 | 0.07 | 0.14 | 2,885 |
+| U2R | 0.65 | 0.25 | 0.37 | 67 |
+| normal | 0.67 | 0.96 | 0.79 | 9,711 |
+
+Overall accuracy: 76% (vs. Logistic Regression's 74%)
+
+**🔑 Key finding: R2L recall improved (0.00 → 0.07), but revealed a more specific story.**
+- R2L precision is 0.98 — when the model does predict R2L, it's almost always correct
+- But recall is only 0.07 — it only catches a small fraction of real R2L attacks
+- Interpretation: the tree learned a few narrow, reliable R2L patterns, but R2L covers diverse attack types (`guess_passwd`, `warezclient`, `phf`, etc.) — the model only recognizes a slice of that diversity
+- Confusion matrix confirms: of 2,885 real R2L attacks, 2,647 were misclassified as `normal` (same failure direction as Logistic Regression, just less severe — LR only caught 6, Decision Tree caught 215)
+- **Consistent pattern across two different model types:** when either model fails on R2L, it defaults to "normal," not a different attack category — strong evidence this reflects a real property of the data (R2L looks similar to normal traffic from the model's perspective), not just an algorithm quirk
+
+![Confusion Matrix - Decision Tree (Multi-class)](images/confusion_matrix_tree_multiclass.png)

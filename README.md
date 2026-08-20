@@ -51,7 +51,7 @@ Three models trained and compared: Logistic Regression, Decision Tree, and Rando
 - Feature importance analysis (Random Forest + Decision Tree structure) showed the model relies on sensible signals: traffic volume (`src_bytes`), service-behavior consistency, and login status
 - Hyperparameter tuning revealed a significant overfitting gap: 99.9% cross-validation accuracy dropped to 78% on the real test set — a concrete example of why proper train/test evaluation matters
 
-- 🔄 **Multi-class classification** — Logistic Regression done, revealed severe class imbalance impact (R2L recall: 0.00); Decision Tree and Random Forest next
+- 🔄 **Multi-class classification** — Logistic Regression and Decision Tree done; both show R2L is the hardest class to detect (severe class imbalance); Random Forest next
 
 ## 📖 Full Methodology & Learning Notes
 
