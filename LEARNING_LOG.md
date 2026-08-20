@@ -250,4 +250,4 @@ Overall accuracy: 76% (vs. Logistic Regression's 74%)
 - Confusion matrix confirms: of 2,885 real R2L attacks, 2,647 were misclassified as `normal` (same failure direction as Logistic Regression, just less severe — LR only caught 6, Decision Tree caught 215)
 - **Consistent pattern across two different model types:** when either model fails on R2L, it defaults to "normal," not a different attack category — strong evidence this reflects a real property of the data (R2L looks similar to normal traffic from the model's perspective), not just an algorithm quirk
 
-![Confusion Matrix - Decision Tree (Multi-class)](images/confusion_matrix_tree_multiclass.png)
+![Confusion Matrix - Decision Tree (Multi-class)](images/confusion_matrix_dt_multiclass.png)
