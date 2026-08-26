@@ -27,10 +27,6 @@ pip install pandas numpy scikit-learn matplotlib seaborn jupyter notebook
 ```
 
 ---
-## 📌 Project Status
-
-- ✅ **Binary classification** (normal vs. attack) — complete
-- 🔄 **Multi-class classification** (5 categories: normal, DoS, Probe, R2L, U2R) — in progress
 
 ## 🏆 Results (Binary Classification)
 
